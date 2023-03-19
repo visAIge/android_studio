@@ -1,8 +1,10 @@
 package com.example.capstone1;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Debug;
@@ -46,29 +48,51 @@ public class Login extends AppCompatActivity {
 
     private void signIn(String id, String password) {
 
-        if (!id.isEmpty() && !password.isEmpty()) {
-            firebaseDatabase = FirebaseDatabase.getInstance();
-            databaseReference = firebaseDatabase.getReference().child("user");
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference().child("user");
 
-            databaseReference.addValueEventListener(new ValueEventListener() {
+        if (!id.isEmpty() && !password.isEmpty()) {
+            databaseReference.child(id).addValueEventListener(new ValueEventListener() {
                 @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    for (DataSnapshot logSnapshot : snapshot.getChildren()) {
-//                        String id = logSnapshot.getValue(String.class);
-//                        if(id == null) {
-//                            Toast.makeText(Login.this, "null", Toast.LENGTH_SHORT).show();
-//                        }
-//                        else {
-//                            Toast.makeText(Login.this, id, Toast.LENGTH_SHORT).show();
-//                        }
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    userList group = dataSnapshot.getValue(userList.class);
+
+                    if(password.equals(group.getPassword())) {
+                        // 메인화면으로 이동
+                        Intent intent = new Intent(Login.this, MainActivity.class);
+                        startActivity(intent); //실제 화면 이동
+                    }
+                    else {
+
+                        Toast.makeText(Login.this, "비밀번호가 틀렸습니다.", Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Toast.makeText(Login.this, "error : " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    //Log.e("MainActivity", String.valueOf(databaseError.toException())); // 에러문 출력
                 }
             });
         }
     }
+
+//    void showDialog() {
+//        AlertDialog.Builder msgBuilder = new AlertDialog.Builder(Login.this)
+//                .setTitle("로그인 실패")
+//                .setMessage("비밀번호가 틀렸습니다.")
+//                .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//
+//                    }
+//                })
+//                .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//
+//                    }
+//                });
+//        AlertDialog msgDlg = msgBuilder.create();
+//        msgDlg.show();
+//    }
 }

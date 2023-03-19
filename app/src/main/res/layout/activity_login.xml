@@ -26,6 +26,7 @@
         android:hint="아이디"
         android:textColorHint="#DCDCDC"
         android:inputType="text"
+        android:textColor="@color/black"
         android:background="@drawable/login_edittext_custom"
         app:layout_constraintBottom_toTopOf="@+id/login_password"
         app:layout_constraintEnd_toEndOf="parent"
@@ -41,6 +42,7 @@
         android:textColorHint="#DCDCDC"
         android:hint="비밀번호"
         android:inputType="textPassword"
+        android:textColor="@color/black"
         android:background="@drawable/login_edittext_custom"
         app:layout_constraintBottom_toTopOf="@+id/login_button"
         app:layout_constraintStart_toStartOf="@+id/login_email" />
