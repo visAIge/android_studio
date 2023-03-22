@@ -41,13 +41,14 @@ public class Login extends AppCompatActivity {
         login_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+//                Intent intent = new Intent(Login.this, MainActivity.class);
+//                startActivity(intent); //실제 화면 이동
                 signIn(login_ID.getText().toString(),login_password.getText().toString());
             }
         });
     }
 
     private void signIn(String id, String password) {
-
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference().child("user");
 
@@ -67,9 +68,9 @@ public class Login extends AppCompatActivity {
                         Toast.makeText(Login.this, "비밀번호가 틀렸습니다.", Toast.LENGTH_SHORT).show();
                     }
                 }
-
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Toast.makeText(Login.this, "에러", Toast.LENGTH_SHORT).show();
                     //Log.e("MainActivity", String.valueOf(databaseError.toException())); // 에러문 출력
                 }
             });
