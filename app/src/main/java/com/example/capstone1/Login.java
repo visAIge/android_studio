@@ -4,8 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Debug;
 import android.util.Log;
@@ -41,8 +43,6 @@ public class Login extends AppCompatActivity {
         login_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent intent = new Intent(Login.this, MainActivity.class);
-//                startActivity(intent); //실제 화면 이동
                 signIn(login_ID.getText().toString(),login_password.getText().toString());
             }
         });
@@ -61,6 +61,7 @@ public class Login extends AppCompatActivity {
                     if(password.equals(group.getPassword())) {
                         // 메인화면으로 이동
                         Intent intent = new Intent(Login.this, MainActivity.class);
+                        intent.putExtra("login_user_id", id);
                         startActivity(intent); //실제 화면 이동
                     }
                     else {

@@ -1,16 +1,15 @@
 package com.example.capstone1;
 
-
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
+import android.view.ContextMenu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
+import android.widget.ImageView;
+
 
 
 public class MainActivity extends AppCompatActivity {
@@ -19,9 +18,16 @@ public class MainActivity extends AppCompatActivity {
     private Button btn_otp;
     private Button btn_QR;
     private Button btn_log;
+    private ImageView imageView;
+
+    String login_user_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Intent login_intent = getIntent();
+        login_user_id = login_intent.getExtras().getString("login_user_id");
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -60,23 +66,29 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent); //실제 화면 이동
             }
         });
+
+        imageView = (ImageView) findViewById(R.id.main_image_view);
+        registerForContextMenu(imageView);
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo menuInfo)
+    {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
-        return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
+    public boolean onContextItemSelected(MenuItem item)
+    {
+        switch(item.getItemId())
+        {
             case R.id.user_info_item:
-                Toast.makeText(this,"user info", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainActivity.this, user_info.class);
+                intent.putExtra("login_user_id", login_user_id);
+                startActivity(intent); //실제 화면 이동
                 break;
         }
-        return super.onOptionsItemSelected(item);
+        return super.onContextItemSelected(item);
     }
 }
