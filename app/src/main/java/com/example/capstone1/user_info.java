@@ -50,6 +50,7 @@ public class user_info extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(user_info.this, MainActivity.class);
+                intent.putExtra("login_user_id", login_user_id); // 메인화면으로 이동할 때 id값을 계속 넘겨줘야함
                 startActivity(intent); //실제 화면 이동
             }
         });
