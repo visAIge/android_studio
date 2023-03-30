@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.nio.ByteBuffer;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
@@ -53,6 +54,8 @@ public class MainActivity3 extends AppCompatActivity {
             }
         });
 
+        // 회원가입 할 때 otp key를 db에 저장해두기 때문에 generate를 계속 호출할 필요가 없음
+        // db에서 otp key를 가져와서 비교하는 식으로 수정해야 함
         HashMap<String, String> map = MainActivity3.generate("name", "host");
         String otpkey = map.get("encodedKey");
         String url = map.get("url");
@@ -74,13 +77,14 @@ public class MainActivity3 extends AppCompatActivity {
         });
     }
 
+    // 이 함수가 otp key를 생성하는 부분이라서 회원가입할 때 한번 호출하기만 하면 됨 그 이후에는 호출 필요없음
     public static HashMap<String, String> generate(String userName, String hostName) {
         HashMap<String, String> map = new HashMap<String, String>();
+        String userId = "bae0000"; // 회원가입 할 때 입력한 아이디
 
-        byte[] buffer = new byte[5 + 5 * 5];
-        new Random().nextBytes(buffer);
+        byte[] userId_byte = userId.getBytes();
         Base32 codec = new Base32();
-        byte[] secretKey = Arrays.copyOf(buffer, 10);
+        byte[] secretKey = Arrays.copyOf(userId_byte, 10);
         byte[] bEncodedKey = codec.encode(secretKey);
 
         String encodedKey = new String(bEncodedKey);
@@ -88,8 +92,14 @@ public class MainActivity3 extends AppCompatActivity {
         // Google OTP 앱에 userName@hostName 으로 저장됨
         // key를 입력하거나 생성된 QR코드를 바코드 스캔하여 등록
 
+        // map에 저장할 필요 없음 db에서 가져올거임
         map.put("encodedKey", encodedKey);
         map.put("url", url);
+
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = firebaseDatabase.getReference().child("user").child(userId).child("otp_key");
+        databaseReference.setValue(encodedKey);
+
         return map;
     }
 
