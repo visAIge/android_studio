@@ -1,5 +1,6 @@
 package com.example.capstone1;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -24,11 +25,13 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.codec.binary.Base32;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity3 extends AppCompatActivity {
-    private TextView otp_key;
     private EditText otp_input;
     private Button main_btn2;
     private Button input_otp_btn;
@@ -36,12 +39,14 @@ public class MainActivity3 extends AppCompatActivity {
     DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
     DatabaseReference conditionRef = mRootRef.child("check_otp");
 
+    private String otpkey;
+
+    // otp 화면으로 넘어올 때 메인화면에서 로그인된 사용자의 아이디 넘겨줘야 함
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main3);
 
-        otp_key = findViewById(R.id.otp_key);
         otp_input = findViewById(R.id.otp_input);
         main_btn2 = findViewById(R.id.main_btn2);
         input_otp_btn = findViewById(R.id.input_otp_btn);
@@ -56,12 +61,24 @@ public class MainActivity3 extends AppCompatActivity {
 
         // 회원가입 할 때 otp key를 db에 저장해두기 때문에 generate를 계속 호출할 필요가 없음
         // db에서 otp key를 가져와서 비교하는 식으로 수정해야 함
-        HashMap<String, String> map = MainActivity3.generate("name", "host");
-        String otpkey = map.get("encodedKey");
-        String url = map.get("url");
+        String userId = "bae0000";
 
-        otp_key.setText(otpkey);
+        // 파이어베이스 연동 코드 동일하게 수정 필요 여기저기 너무 많이 중복됨
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = firebaseDatabase.getReference().child("user");
+        databaseReference.child(userId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                userList group = dataSnapshot.getValue(userList.class);
+                otpkey = group.getOtp_key();
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
+            }
+        });
+
+        // 올바른 otp key를 입력했는지 확인
         input_otp_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -78,9 +95,8 @@ public class MainActivity3 extends AppCompatActivity {
     }
 
     // 이 함수가 otp key를 생성하는 부분이라서 회원가입할 때 한번 호출하기만 하면 됨 그 이후에는 호출 필요없음
-    public static HashMap<String, String> generate(String userName, String hostName) {
-        HashMap<String, String> map = new HashMap<String, String>();
-        String userId = "bae0000"; // 회원가입 할 때 입력한 아이디
+    public static void generate(String userId) {
+        //String userId = "bae0000"; // 회원가입 할 때 입력한 아이디
 
         byte[] userId_byte = userId.getBytes();
         Base32 codec = new Base32();
@@ -88,21 +104,16 @@ public class MainActivity3 extends AppCompatActivity {
         byte[] bEncodedKey = codec.encode(secretKey);
 
         String encodedKey = new String(bEncodedKey);
-        String url = getQRBarcodeURL(userName, hostName, encodedKey);
+        //String url = getQRBarcodeURL(userName, hostName, encodedKey);
         // Google OTP 앱에 userName@hostName 으로 저장됨
         // key를 입력하거나 생성된 QR코드를 바코드 스캔하여 등록
-
-        // map에 저장할 필요 없음 db에서 가져올거임
-        map.put("encodedKey", encodedKey);
-        map.put("url", url);
 
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = firebaseDatabase.getReference().child("user").child(userId).child("otp_key");
         databaseReference.setValue(encodedKey);
-
-        return map;
     }
 
+    // 올바른 otp 코드를 입력했는지 체크
     public boolean checkCode(String userCode, String otpkey) {
         long otpnum = Integer.parseInt(userCode); // Google OTP 앱에 표시되는 6자리 숫자
         long wave = new Date().getTime() / 30000; // Google OTP의 주기는 30초
