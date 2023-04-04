@@ -40,12 +40,16 @@ public class MainActivity3 extends AppCompatActivity {
     DatabaseReference conditionRef = mRootRef.child("check_otp");
 
     private String otpkey;
+    private String login_user_id;
 
     // otp 화면으로 넘어올 때 메인화면에서 로그인된 사용자의 아이디 넘겨줘야 함
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main3);
+
+        Intent login_intent = getIntent();
+        login_user_id = login_intent.getExtras().getString("login_user_id");
 
         otp_input = findViewById(R.id.otp_input);
         main_btn2 = findViewById(R.id.main_btn2);
@@ -55,18 +59,19 @@ public class MainActivity3 extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity3.this, MainActivity.class);
+                intent.putExtra("login_user_id", login_user_id);
                 startActivity(intent); //실제 화면 이동
             }
         });
 
         // 회원가입 할 때 otp key를 db에 저장해두기 때문에 generate를 계속 호출할 필요가 없음
         // db에서 otp key를 가져와서 비교하는 식으로 수정해야 함
-        String userId = "bae0000";
+        //String userId = "bae0000";
 
         // 파이어베이스 연동 코드 동일하게 수정 필요 여기저기 너무 많이 중복됨
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = firebaseDatabase.getReference().child("user");
-        databaseReference.child(userId).addValueEventListener(new ValueEventListener() {
+        databaseReference.child(login_user_id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 userList group = dataSnapshot.getValue(userList.class);

@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, MainActivity3.class);
+                intent.putExtra("login_user_id", login_user_id);
                 startActivity(intent); //실제 화면 이동
             }
         });
