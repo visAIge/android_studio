@@ -31,13 +31,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+// otp key를 입력만 하면 되기 때문에 ui 수정 필요
 public class MainActivity3 extends AppCompatActivity {
     private EditText otp_input;
     private Button main_btn2;
     private Button input_otp_btn;
 
-    DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
-    DatabaseReference conditionRef = mRootRef.child("check_otp");
+    FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+    DatabaseReference mRootRef = firebaseDatabase.getReference();
 
     private String otpkey;
     private String login_user_id;
@@ -63,15 +64,8 @@ public class MainActivity3 extends AppCompatActivity {
                 startActivity(intent); //실제 화면 이동
             }
         });
-
-        // 회원가입 할 때 otp key를 db에 저장해두기 때문에 generate를 계속 호출할 필요가 없음
-        // db에서 otp key를 가져와서 비교하는 식으로 수정해야 함
-        //String userId = "bae0000";
-
-        // 파이어베이스 연동 코드 동일하게 수정 필요 여기저기 너무 많이 중복됨
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference databaseReference = firebaseDatabase.getReference().child("user");
-        databaseReference.child(login_user_id).addValueEventListener(new ValueEventListener() {
+        
+        mRootRef.child("user").child(login_user_id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 userList group = dataSnapshot.getValue(userList.class);
@@ -85,6 +79,8 @@ public class MainActivity3 extends AppCompatActivity {
 
         // 올바른 otp key를 입력했는지 확인
         input_otp_btn.setOnClickListener(new View.OnClickListener() {
+            DatabaseReference conditionRef = mRootRef.child("check_otp");
+            
             @Override
             public void onClick(View view) {
                 boolean check = checkCode(otp_input.getText().toString(), otpkey); //EditText에 입력한 otp 코드와 생성된 otp 코드 비교
@@ -101,17 +97,12 @@ public class MainActivity3 extends AppCompatActivity {
 
     // 이 함수가 otp key를 생성하는 부분이라서 회원가입할 때 한번 호출하기만 하면 됨 그 이후에는 호출 필요없음
     public static void generate(String userId) {
-        //String userId = "bae0000"; // 회원가입 할 때 입력한 아이디
-
         byte[] userId_byte = userId.getBytes();
         Base32 codec = new Base32();
         byte[] secretKey = Arrays.copyOf(userId_byte, 10);
         byte[] bEncodedKey = codec.encode(secretKey);
 
         String encodedKey = new String(bEncodedKey);
-        //String url = getQRBarcodeURL(userName, hostName, encodedKey);
-        // Google OTP 앱에 userName@hostName 으로 저장됨
-        // key를 입력하거나 생성된 QR코드를 바코드 스캔하여 등록
 
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = firebaseDatabase.getReference().child("user").child(userId).child("otp_key");
@@ -166,9 +157,9 @@ public class MainActivity3 extends AppCompatActivity {
         return (int) truncatedHash;
     }
 
-    public static String getQRBarcodeURL(String user, String host, String secret) {
-        // QR코드 주소 생성
-        String format2 = "http://chart.apis.google.com/chart?cht=qr&chs=200x200&chl=otpauth://totp/%s@%s%%3Fsecret%%3D%s&chld=H|0";
-        return String.format(format2, user, host, secret);
-    }
+//    public static String getQRBarcodeURL(String user, String host, String secret) {
+//        // QR코드 주소 생성
+//        String format2 = "http://chart.apis.google.com/chart?cht=qr&chs=200x200&chl=otpauth://totp/%s@%s%%3Fsecret%%3D%s&chld=H|0";
+//        return String.format(format2, user, host, secret);
+//    }
 }

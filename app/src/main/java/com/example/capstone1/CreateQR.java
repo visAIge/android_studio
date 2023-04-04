@@ -21,6 +21,14 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
 
+/**
+ * 1. 사용자가 특정 id를 editText에 입력하면
+ * 2. 해당 아이디로 db에서 모든 정보를 가져온 후 qr 코드를 생성한다
+ * 3. 생성된 qr코드 정보를 db에 저장한다.
+ * 3-1. 현재 qr코드에 사용자 이름을 넣어서 db에 qr정보-사용자 이름을 넣는다 -> 이름 + 아이디 + 이메일 ?? 등등 추가적인 정보 등록
+ * 3-2. rpi에서 qr코드를 인식한 후 인식된 이름이 db에 저장되어 있는지 판별 -> 이건 어떻게 수정...?
+ * **/
+
 public class CreateQR extends AppCompatActivity {
     private ImageView iv;
     private String text;
@@ -42,9 +50,10 @@ public class CreateQR extends AppCompatActivity {
 
         MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
         try{
+            // text == qr에 등록되는 정보 (현재는 사용자 이름만 되어있음)
             BitMatrix bitMatrix = multiFormatWriter.encode(text, BarcodeFormat.QR_CODE,200,200);
             BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
-            Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix);
+            Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix); // 이걸 db에 저장..?
             iv.setImageBitmap(bitmap);
 
             //파이어베이스로 QR 정보 전송
