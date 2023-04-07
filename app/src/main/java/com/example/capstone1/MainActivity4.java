@@ -21,6 +21,8 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
+import java.io.ByteArrayOutputStream;
+
 public class MainActivity4 extends AppCompatActivity {
     private Button createBtn;
     private EditText input_QR_user;
@@ -48,24 +50,42 @@ public class MainActivity4 extends AppCompatActivity {
         createBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent intent = new Intent(MainActivity4.this, CreateQR.class);
-//                intent.putExtra("input_QR_user",input_QR_user.getText().toString());
-//                startActivity(intent); //실제 화면 이동
-
+                // 'create' 버튼 클릭했을 때 QR 생성 후 DB에 저장만 출력은 따로 UI 추가 예정
                 MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
                 try{
                     // text == qr에 등록되는 정보 (현재는 사용자 이름만 되어있음)
                     BitMatrix bitMatrix = multiFormatWriter.encode(input_QR_user.getText().toString(), BarcodeFormat.QR_CODE,200,200);
                     BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
-                    Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix); // 이걸 db에 저장..?
-                    //iv.setImageBitmap(bitmap);
+                    Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix); // bitmap 이미지 db에 저장
 
-                    Toast.makeText(MainActivity4.this, bitmap.toString(), Toast.LENGTH_SHORT).show();
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                    byte[] reviewImage = stream.toByteArray();
+                    String simage = byteArrayToBinaryString(reviewImage);
+
                     firebaseDatabase = FirebaseDatabase.getInstance();
                     databaseReference = firebaseDatabase.getReference().child("user").child(input_QR_user.getText().toString()).child("qr_code");
-                    databaseReference.setValue(bitmap);
+                    databaseReference.setValue(simage);
                 }catch (Exception e){}
             }
         });
+    }
+
+    public static String byteArrayToBinaryString(byte[] b) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i<b.length; ++i) {
+            sb.append(byteToBinaryString(b[i]));
+        }
+        return sb.toString();
+    }
+
+    public static String byteToBinaryString(byte n) {
+        StringBuilder sb = new StringBuilder("00000000");
+        for(int bit = 0; bit<8; bit++) {
+            if(((n >> bit) & 1) > 0) {
+                sb.setCharAt(7 - bit, '1');
+            }
+        }
+        return sb.toString();
     }
 }

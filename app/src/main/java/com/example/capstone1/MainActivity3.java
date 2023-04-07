@@ -103,6 +103,7 @@ public class MainActivity3 extends AppCompatActivity {
         byte[] bEncodedKey = codec.encode(secretKey);
 
         String encodedKey = new String(bEncodedKey);
+        //String url = getQRBarcodeURL(userId, userId, encodedKey);
 
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = firebaseDatabase.getReference().child("user").child(userId).child("otp_key");
