@@ -6,6 +6,7 @@ public class userList {
     private String password;
     private String name;
     private String otp_key;
+    private String qr_code;
 
     public userList() {}
 
@@ -39,6 +40,14 @@ public class userList {
 
     public void setOtp_key(String otp_key) {
         this.otp_key = otp_key;
+    }
+
+    public String getQr_code() {
+        return qr_code;
+    }
+
+    public void setQr_code(String qr_code) {
+        this.qr_code = qr_code;
     }
 
     public userList(String id, String password, String name) {

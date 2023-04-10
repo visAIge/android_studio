@@ -63,7 +63,10 @@ public class MainActivity extends AppCompatActivity {
         btn_log.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, MainActivity5.class);
+//                Intent intent = new Intent(MainActivity.this, MainActivity5.class);
+//                startActivity(intent); //실제 화면 이동
+                Intent intent = new Intent(MainActivity.this, CreateQR.class);
+                intent.putExtra("login_user_id", login_user_id);
                 startActivity(intent); //실제 화면 이동
             }
         });

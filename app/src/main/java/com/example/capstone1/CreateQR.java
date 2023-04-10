@@ -1,8 +1,10 @@
 package com.example.capstone1;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import android.graphics.Bitmap;
@@ -11,6 +13,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.common.BitMatrix;
@@ -19,6 +24,8 @@ import com.journeyapps.barcodescanner.BarcodeEncoder;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 
 /**
@@ -31,36 +38,39 @@ import java.util.HashMap;
 
 public class CreateQR extends AppCompatActivity {
     private ImageView iv;
-    private String text;
+    private String login_user_id;
     private Button main_btn;
 
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private DatabaseReference databaseReference = database.getReference();
+    private DatabaseReference databaseReference = database.getReference().child("user");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Intent login_intent = getIntent();
+        login_user_id = login_intent.getExtras().getString("login_user_id");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_qr);
 
-        Intent intent = getIntent();
-
         iv = (ImageView)findViewById(R.id.qrcode);
-        text = intent.getStringExtra("input_QR_user");
-        Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
 
-        MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
-        try{
-            // text == qr에 등록되는 정보 (현재는 사용자 이름만 되어있음)
-            BitMatrix bitMatrix = multiFormatWriter.encode(text, BarcodeFormat.QR_CODE,200,200);
-            BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
-            Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix); // 이걸 db에 저장..?
-            iv.setImageBitmap(bitmap);
+        // db에 로그인된 사용자 아이디로 생성된 qr 코드가 저장되어 있다고 가정
+        databaseReference.child(login_user_id).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                userList group = dataSnapshot.getValue(userList.class);
+                String image = group.getQr_code();
 
-            //파이어베이스로 QR 정보 전송
-            String user = "user" + Integer.toString(count.count);
-            count.count = count.count + 1;
-            databaseReference.child("qr_info").child(user).setValue(text);
-        }catch (Exception e){}
+                byte[] b = binaryStringToByteArray(image);
+                ByteArrayInputStream is = new ByteArrayInputStream(b);
+                Drawable reviewImage = Drawable.createFromStream(is, "reviewImage");
+                iv.setImageDrawable(reviewImage);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(CreateQR.this, "에러", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         main_btn = findViewById(R.id.main_button);
         main_btn.setOnClickListener(new View.OnClickListener() {
@@ -70,5 +80,24 @@ public class CreateQR extends AppCompatActivity {
                 startActivity(intent); //실제 화면 이동
             }
         });
+    }
+
+    public static byte[] binaryStringToByteArray(String s) {
+        int count = s.length() / 8;
+        byte[] b = new byte[count];
+        for (int i = 1; i<count; i++) {
+            String t = s.substring((i-1) * 8, i*8);
+            b[i-1] = binaryStringToByte(t);
+        }
+        return b;
+    }
+
+    public static byte binaryStringToByte(String s) {
+        byte ret = 0, total = 0;
+        for (int i = 0; i<8; i++) {
+            ret = (s.charAt(7-i) == '1') ? (byte)(1 << i) : 0;
+            total = (byte) (ret | total);
+        }
+        return total;
     }
 }
