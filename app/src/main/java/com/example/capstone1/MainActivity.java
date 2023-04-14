@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView imageView;
     private Toolbar toolbar;
     private NavigationView navigationView;
-    String login_user_id;
+    private String login_user_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if (id == R.id.menu_pwd){
                     Intent intent = new Intent(MainActivity.this, MainActivity2.class);
+                    intent.putExtra("login_user_id", login_user_id);
                     startActivity(intent);
                 }else if(id == R.id.menu_otp){
                     Intent intent = new Intent(MainActivity.this, MainActivity3.class);
@@ -56,9 +57,11 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                 }else if(id == R.id.menu_lock){
                     Intent intent = new Intent(MainActivity.this, MainActivity5.class);
-                    startActivity(intent); //실제 화면 이동
+                    intent.putExtra("login_user_id", login_user_id);
+                    startActivity(intent);
                 }else if(id == R.id.menu_create_qr){
                     Intent intent = new Intent(MainActivity.this, MainActivity4.class);
+                    intent.putExtra("login_user_id", login_user_id);
                     startActivity(intent);
                 }else if(id == R.id.menu_qr){ // 생성된 qr 확인
                     Intent intent = new Intent(MainActivity.this, CreateQR.class);

@@ -23,6 +23,7 @@ public class MainActivity5 extends AppCompatActivity {
 
     ArrayList<String> arrayList = new ArrayList<>();
     ArrayAdapter<String> adapter;
+    private String login_user_id;
 
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
@@ -35,11 +36,15 @@ public class MainActivity5 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main5);
 
+        Intent login_intent = getIntent();
+        login_user_id = login_intent.getExtras().getString("login_user_id");
+
         goMainbtn = findViewById(R.id.log_go_main);
         goMainbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity5.this, MainActivity.class);
+                intent.putExtra("login_user_id", login_user_id);
                 startActivity(intent);
             }
         });

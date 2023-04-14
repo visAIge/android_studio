@@ -52,11 +52,15 @@ public class MainActivity2 extends AppCompatActivity {
 
     private String password;
 
+    private String login_user_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+
+        Intent login_intent = getIntent();
+        login_user_id = login_intent.getExtras().getString("login_user_id");
 
         pass_btn0 = findViewById(R.id.pass_btn0);
         pass_btn1 = findViewById(R.id.pass_btn1);
@@ -79,6 +83,7 @@ public class MainActivity2 extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity2.this, MainActivity.class);
+                intent.putExtra("login_user_id", login_user_id);
                 startActivity(intent); //실제 화면 이동
             }
         });

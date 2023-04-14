@@ -27,6 +27,7 @@ public class MainActivity4 extends AppCompatActivity {
     private Button createBtn;
     private EditText input_QR_user;
     private Button qr_go_main;
+    private String login_user_id;
 
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
@@ -36,13 +37,17 @@ public class MainActivity4 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main4);
 
+        Intent login_intent = getIntent();
+        login_user_id = login_intent.getExtras().getString("login_user_id");
+
         input_QR_user = findViewById(R.id.input_QR_user);
         qr_go_main = findViewById(R.id.qr_go_main);
         qr_go_main.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity4.this, MainActivity.class);
-                startActivity(intent); //실제 화면 이동
+                intent.putExtra("login_user_id", login_user_id);
+                startActivity(intent);
             }
         });
 
