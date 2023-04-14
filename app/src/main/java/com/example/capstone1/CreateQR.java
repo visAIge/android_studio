@@ -68,31 +68,38 @@ public class CreateQR extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 userList group = dataSnapshot.getValue(userList.class);
+
                 String image = group.getQr_code().get("img");
-
-                Date today = null;
-                Date qr_date = null;
-                try {
-                    qr_date = mFormat.parse(group.getQr_code().get("date")); // 2023-04-14
-                    today = mFormat.parse(getTime());
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(qr_date);
-                cal.add(Calendar.DATE, -1); //임시로 1로 하고 나중에 7로 변경해야 함
-                qr_date = cal.getTime();
-
-                if(qr_date.compareTo(today) <= 0 ){
-                    //데이터베이스에서 qr 정보 삭제
-                    delete_qr();
-                    Toast.makeText(CreateQR.this, "QR코드는 일주일 후 삭제됩니다.", Toast.LENGTH_SHORT).show();
+                if(image.isEmpty()) {
+                    Toast.makeText(CreateQR.this, "등록된 qr코드가 없습니다.", Toast.LENGTH_SHORT).show();
+                    iv.setImageResource(R.drawable.user_info_basic);
                 }
                 else {
-                    byte[] b = binaryStringToByteArray(image);
-                    ByteArrayInputStream is = new ByteArrayInputStream(b);
-                    Drawable reviewImage = Drawable.createFromStream(is, "reviewImage");
-                    iv.setImageDrawable(reviewImage);
+                    Date today = null;
+                    Date qr_date = null;
+                    try {
+                        qr_date = mFormat.parse(group.getQr_code().get("date")); // 2023-04-14
+                        today = mFormat.parse(getTime());
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(qr_date);
+                    cal.add(Calendar.DATE, 7); //임시로 1로 하고 나중에 7로 변경해야 함
+                    qr_date = cal.getTime();
+
+                    if(qr_date.compareTo(today) <= 0 ){
+                        //데이터베이스에서 qr 정보 삭제
+                        delete_qr();
+                        Toast.makeText(CreateQR.this, "QR코드는 일주일 후 삭제됩니다.", Toast.LENGTH_SHORT).show();
+                        iv.setImageResource(R.drawable.user_info_basic);
+                    }
+                    else {
+                        byte[] b = binaryStringToByteArray(image);
+                        ByteArrayInputStream is = new ByteArrayInputStream(b);
+                        Drawable reviewImage = Drawable.createFromStream(is, "reviewImage");
+                        iv.setImageDrawable(reviewImage);
+                    }
                 }
             }
             @Override
@@ -106,6 +113,7 @@ public class CreateQR extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(CreateQR.this, MainActivity.class);
+                intent.putExtra("login_user_id", login_user_id);
                 startActivity(intent); //실제 화면 이동
             }
         });
