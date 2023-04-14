@@ -1,12 +1,14 @@
 package com.example.capstone1;
 
+import java.util.HashMap;
+
 public class userList {
 
     private String id;
     private String password;
     private String name;
     private String otp_key;
-    private String qr_code;
+    private HashMap<String, String> qr_code = new HashMap<String, String>();
 
     public userList() {}
 
@@ -42,11 +44,11 @@ public class userList {
         this.otp_key = otp_key;
     }
 
-    public String getQr_code() {
+    public HashMap<String, String> getQr_code() {
         return qr_code;
     }
 
-    public void setQr_code(String qr_code) {
+    public void setQr_code(HashMap<String, String> qr_code) {
         this.qr_code = qr_code;
     }
 
