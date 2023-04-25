@@ -67,7 +67,12 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent = new Intent(MainActivity.this, CreateQR.class);
                     intent.putExtra("login_user_id", login_user_id);
                     startActivity(intent);
+                }else if(id == R.id.menu_user_info){ // 생성된 qr 확인
+                    Intent intent = new Intent(MainActivity.this, user_info.class);
+                    intent.putExtra("login_user_id", login_user_id);
+                    startActivity(intent);
                 }
+
                 DrawerLayout drawer = findViewById(R.id.drawer_layout);
                 drawer.closeDrawer(GravityCompat.START);
                 return true;
