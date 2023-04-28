@@ -37,6 +37,8 @@ public class MainActivity4 extends AppCompatActivity {
     private String login_user_id;
     private HashMap<String, String> qr_info = new HashMap<String, String>();
 
+    private static final String SECRET_KEY = "1234567890123456"; // qr 문자열 암호화할 때 사용할 키
+
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference = database.getReference().child("user");
 
@@ -80,12 +82,16 @@ public class MainActivity4 extends AppCompatActivity {
                     }
                 });
 
-                // 'create' 버튼 클릭했을 때 QR 생성 후 DB에 저장만 출력은 따로 UI 추가 예정
+                // 'create' 버튼 클릭했을 때 QR 생성 후 DB에 저장
                 MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
                 try{
-                    // text == qr에 등록되는 정보 (현재는 사용자 이름만 되어있음)
                     String qr_info_str = qr_info.toString();
-                    BitMatrix bitMatrix = multiFormatWriter.encode(qr_info_str, BarcodeFormat.QR_CODE,200,200);
+
+                    // qr에 담을 문자열 암호화 과정
+                    qr_encryption crypto = new qr_encryption(SECRET_KEY);
+                    String encryptText = crypto.encrypt(qr_info_str);
+
+                    BitMatrix bitMatrix = multiFormatWriter.encode(encryptText, BarcodeFormat.QR_CODE,200,200);
                     BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
                     Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix); // bitmap 이미지 db에 저장
 
@@ -102,6 +108,8 @@ public class MainActivity4 extends AppCompatActivity {
 
                     // 만들어진 qr에 담긴 아이디를 저장
                     databaseReference.child(login_user_id).child("create_qr").child(Integer.toString(count.count)).setValue(input_QR_user.getText().toString());
+
+                    Toast.makeText(MainActivity4.this, "QR코드 생성 성공", Toast.LENGTH_SHORT).show();
                 }catch (Exception e){}
             }
         });

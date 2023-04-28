@@ -9,6 +9,7 @@ public class userList {
     private String name;
     private String otp_key;
     private HashMap<String, String> qr_code = new HashMap<String, String>();
+    private String phone_num;
 
     public userList() {}
 
@@ -50,6 +51,14 @@ public class userList {
 
     public void setQr_code(HashMap<String, String> qr_code) {
         this.qr_code = qr_code;
+    }
+
+    public String getPhone_num() {
+        return phone_num;
+    }
+
+    public void setPhone_num(String phone_num) {
+        this.phone_num = phone_num;
     }
 
     public userList(String id, String password, String name) {
