@@ -31,6 +31,10 @@ public class MainActivity5 extends AppCompatActivity {
     ListView listView;
     Button goMainbtn;
 
+    Button pwd_log_btn;
+    Button face_log_btn;
+    Button qr_log_btn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,17 +58,53 @@ public class MainActivity5 extends AppCompatActivity {
         listView.setAdapter(adapter);
 
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference().child("lock_log");
 
+        pwd_log_btn = findViewById(R.id.pwd_log);
+        pwd_log_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                databaseReference = firebaseDatabase.getReference().child("door_open").child(login_user_id).child("pwd_lock"); //pwd_lock : 선택한 버튼에 따라서 유동적으로
+                output_log();
+            }
+        });
+
+        face_log_btn = findViewById(R.id.face_log);
+        face_log_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                databaseReference = firebaseDatabase.getReference().child("door_open").child(login_user_id).child("face_lock"); //pwd_lock : 선택한 버튼에 따라서 유동적으로
+                output_log();
+            }
+        });
+
+        qr_log_btn = findViewById(R.id.qr_log);
+        qr_log_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                databaseReference = firebaseDatabase.getReference().child("door_open").child(login_user_id).child("qr_lock"); //pwd_lock : 선택한 버튼에 따라서 유동적으로
+                output_log();
+            }
+        });
+
+    }
+
+    public void output_log() {
+        arrayList.clear();
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot logSnapshot : snapshot.getChildren()) {
-                    String str = logSnapshot.getValue(String.class);
-                    String time = str.substring(0,10);
-                    String date = str.substring(11,19);
-                    String log = time + " " + date + " 출입이 확인되었습니다.";
-                    if(str == null) {
+                    logList group = logSnapshot.getValue(logList.class);
+
+                    String user_id = group.getUser_id();
+                    boolean success = group.isSuccess();
+
+                    String time_date = group.getDate();
+                    String time = time_date.substring(0,10);
+                    String date = time_date.substring(11,19);
+                    String log = user_id + "님이" + time + " " + date + "에 출입이 확인되었습니다.";
+
+                    if(group == null) {
                         Toast.makeText(MainActivity5.this, "null", Toast.LENGTH_SHORT).show();
                     }
                     else {

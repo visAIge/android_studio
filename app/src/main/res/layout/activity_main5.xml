@@ -13,17 +13,52 @@
         android:id="@+id/log_title"
         android:layout_width="match_parent"
         android:layout_height="54dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="30dp"
         android:gravity="center"
         android:text="Check Your Log"
         android:textColor="@color/black"
         android:textSize="30dp"
         android:fontFamily="@font/leferipointwhiteoblique"/>
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center">
+
+        <Button
+            android:id="@+id/pwd_log"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/btn_style"
+            android:text="비밀번호"
+            android:textColor="#000000" />
+
+        <Button
+            android:id="@+id/face_log"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/btn_style"
+            android:text="얼굴 인식"
+            android:textColor="#000000" />
+
+        <Button
+            android:id="@+id/qr_log"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/btn_style"
+            android:text="QR코드"
+            android:textColor="#000000" />
+    </LinearLayout>
+
     <ListView
         android:id="@+id/lv_LogList"
         android:layout_width="match_parent"
-        android:layout_height="499dp"
+        android:layout_height="450dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="40dp"
         android:layout_marginRight="8dp"
