@@ -53,28 +53,36 @@ public class Login extends AppCompatActivity {
         databaseReference = firebaseDatabase.getReference().child("user");
 
         if (!id.isEmpty() && !password.isEmpty()) {
-            databaseReference.child(id).addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    userList group = dataSnapshot.getValue(userList.class);
+                databaseReference.child(id).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        userList group = dataSnapshot.getValue(userList.class);
+                        String login_pwd = null;
+                        try {
+                            login_pwd = group.getPassword();
+                        }catch (NullPointerException e) {
+                            Toast.makeText(Login.this, "존재하지 않는 아이디입니다", Toast.LENGTH_SHORT).show();
+                        }
 
-                    if(password.equals(group.getPassword())) {
-                        // 메인화면으로 이동
-                        Intent intent = new Intent(Login.this, MainActivity.class);
-                        intent.putExtra("login_user_id", id);
-                        startActivity(intent); //실제 화면 이동
+                        if(password.equals(login_pwd)) {
+                            // 메인화면으로 이동
+                            Intent intent = new Intent(Login.this, MainActivity.class);
+                            intent.putExtra("login_user_id", id);
+                            startActivity(intent); //실제 화면 이동
+                        }
+                        else {
+                            Toast.makeText(Login.this, "비밀번호가 틀렸습니다.", Toast.LENGTH_SHORT).show();
+                        }
                     }
-                    else {
-
-                        Toast.makeText(Login.this, "비밀번호가 틀렸습니다.", Toast.LENGTH_SHORT).show();
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Toast.makeText(Login.this, "에러", Toast.LENGTH_SHORT).show();
+                        //Log.e("MainActivity", String.valueOf(databaseError.toException())); // 에러문 출력
                     }
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                    Toast.makeText(Login.this, "에러", Toast.LENGTH_SHORT).show();
-                    //Log.e("MainActivity", String.valueOf(databaseError.toException())); // 에러문 출력
-                }
-            });
+                });
+        }
+        else {
+            Toast.makeText(Login.this, "입력이 필요합니다.", Toast.LENGTH_SHORT).show();
         }
     }
 

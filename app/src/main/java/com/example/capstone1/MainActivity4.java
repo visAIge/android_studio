@@ -74,7 +74,7 @@ public class MainActivity4 extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         userList group = dataSnapshot.getValue(userList.class);
                         qr_info.put("id",input_QR_user.getText().toString());
-                        qr_info.put("name", group.getName());
+                        qr_info.put("name", group.getName()); //여기서 오류가 발생해야 하는데 그냥 존재하지 않는 아이디로 만들어버림..뭐지?
                     }
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {

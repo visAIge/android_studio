@@ -22,7 +22,7 @@ public class userList {
     }
 
     public String getPassword() {
-        return password;
+            return password;
     }
 
     public void setPassword(String password) {

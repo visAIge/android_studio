@@ -83,23 +83,26 @@ public class CreateQR extends AppCompatActivity {
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(qr_date);
-                    cal.add(Calendar.DATE, 7); //임시로 1로 하고 나중에 7로 변경해야 함
-                    qr_date = cal.getTime();
 
-                    if(qr_date.compareTo(today) <= 0 ){
-                        //데이터베이스에서 qr 정보 삭제
-                        delete_qr();
-                        Toast.makeText(CreateQR.this, "QR코드는 일주일 후 삭제됩니다.", Toast.LENGTH_SHORT).show();
-                        iv.setImageResource(R.drawable.user_info_basic);
-                    }
-                    else {
-                        byte[] b = binaryStringToByteArray(image);
-                        ByteArrayInputStream is = new ByteArrayInputStream(b);
-                        Drawable reviewImage = Drawable.createFromStream(is, "reviewImage");
-                        iv.setImageDrawable(reviewImage);
-                    }
+                    Calendar cal = Calendar.getInstance();
+                    try {
+                        cal.setTime(qr_date);
+                        cal.add(Calendar.DATE, 7);
+                        qr_date = cal.getTime();
+
+                        if(qr_date.compareTo(today) <= 0 ){
+                            //데이터베이스에서 qr 정보 삭제
+                            delete_qr();
+                            Toast.makeText(CreateQR.this, "QR코드는 일주일 후 삭제됩니다.", Toast.LENGTH_SHORT).show();
+                            iv.setImageResource(R.drawable.user_info_basic);
+                        }
+                        else {
+                            byte[] b = binaryStringToByteArray(image);
+                            ByteArrayInputStream is = new ByteArrayInputStream(b);
+                            Drawable reviewImage = Drawable.createFromStream(is, "reviewImage");
+                            iv.setImageDrawable(reviewImage);
+                        }
+                    }catch (NullPointerException e) {}
                 }
             }
             @Override
