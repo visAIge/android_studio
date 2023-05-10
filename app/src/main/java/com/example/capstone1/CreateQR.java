@@ -150,5 +150,6 @@ public class CreateQR extends AppCompatActivity {
     private void delete_qr() {
         databaseReference.child(login_user_id).child("qr_code").child("date").setValue("");
         databaseReference.child(login_user_id).child("qr_code").child("img").setValue("");
+        databaseReference.child(login_user_id).child("qr_code").child("lock_user").setValue("");
     }
 }
