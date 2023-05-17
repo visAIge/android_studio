@@ -45,6 +45,7 @@ public class CreateQR extends AppCompatActivity {
     private ImageView iv;
     private String login_user_id;
     private Button main_btn;
+    private Button camera_btn;
 
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference = database.getReference().child("user");
@@ -118,6 +119,15 @@ public class CreateQR extends AppCompatActivity {
                 Intent intent = new Intent(CreateQR.this, MainActivity.class);
                 intent.putExtra("login_user_id", login_user_id);
                 startActivity(intent); //실제 화면 이동
+            }
+        });
+
+        camera_btn = findViewById(R.id.camera_button);
+        camera_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                database.getReference().child("qr_camera").setValue("true");
+                Toast.makeText(CreateQR.this, "QR을 인식해주세요", Toast.LENGTH_SHORT).show();
             }
         });
     }
