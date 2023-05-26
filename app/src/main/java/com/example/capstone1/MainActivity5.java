@@ -19,6 +19,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+// 출입이력 출력
+
 public class MainActivity5 extends AppCompatActivity {
 
     ArrayList<String> arrayList = new ArrayList<>();
@@ -44,6 +46,8 @@ public class MainActivity5 extends AppCompatActivity {
         login_user_id = login_intent.getExtras().getString("login_user_id");
 
         goMainbtn = findViewById(R.id.log_go_main);
+
+        // 메인화면으로 이동
         goMainbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -59,6 +63,7 @@ public class MainActivity5 extends AppCompatActivity {
 
         firebaseDatabase = FirebaseDatabase.getInstance();
 
+        // 각 버튼에 따라 비밀번호 입력, 얼굴 인식, qr 코드를 이용한 출입 이력으로 로그가 나누어짐
         pwd_log_btn = findViewById(R.id.pwd_log);
         pwd_log_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,6 +93,7 @@ public class MainActivity5 extends AppCompatActivity {
 
     }
 
+    // 선택한 버튼에 해당하는 데이터를 db에서 가져옴
     public void output_log() {
         arrayList.clear();
         databaseReference.addValueEventListener(new ValueEventListener() {

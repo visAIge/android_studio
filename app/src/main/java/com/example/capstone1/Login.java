@@ -36,6 +36,7 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        // 사용자가 입력한 아이디와 비밀번호 가져오기
         login_ID = findViewById(R.id.login_ID);
         login_password = findViewById(R.id.login_password);
 
@@ -48,11 +49,14 @@ public class Login extends AppCompatActivity {
         });
     }
 
+    // 로그인 시도
     private void signIn(String id, String password) {
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference().child("user");
 
+        // 아이디와 비밀번호가 둘 다 공백이 아니라면
         if (!id.isEmpty() && !password.isEmpty()) {
+            // 사용자가 입력한 아이디로 db에서 회원 데이터를 전부 가져와서 group 변수에 저장
                 databaseReference.child(id).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -61,9 +65,11 @@ public class Login extends AppCompatActivity {
                         try {
                             login_pwd = group.getPassword();
                         }catch (NullPointerException e) {
+                            // login_pwd가 null == 존재하지 않는 아이디라서 db에서 값을 가져오지 못했기 때문에 null exception 발생
                             Toast.makeText(Login.this, "존재하지 않는 아이디입니다", Toast.LENGTH_SHORT).show();
                         }
 
+                        // db에서 가져온 데이터와 입력한 비밀번호가 일치하다면 메인 화면으로 이동
                         if(password.equals(login_pwd)) {
                             // 메인화면으로 이동
                             Intent intent = new Intent(Login.this, MainActivity.class);

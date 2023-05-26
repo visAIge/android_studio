@@ -56,6 +56,7 @@ public class MainActivity3 extends AppCompatActivity {
         main_btn2 = findViewById(R.id.main_btn2);
         input_otp_btn = findViewById(R.id.input_otp_btn);
 
+        // 메인화면으로 이동
         main_btn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -64,7 +65,8 @@ public class MainActivity3 extends AppCompatActivity {
                 startActivity(intent); //실제 화면 이동
             }
         });
-        
+
+        // 로그인된 아이디에서 otp 계정 가져오기
         mRootRef.child("user").child(login_user_id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

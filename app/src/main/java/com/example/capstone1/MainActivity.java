@@ -17,7 +17,7 @@ import android.widget.ImageView;
 
 import com.google.android.material.navigation.NavigationView;
 
-
+// 메인화면
 public class MainActivity extends AppCompatActivity {
 
     private Button btn_password;

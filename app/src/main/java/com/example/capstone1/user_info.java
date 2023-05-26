@@ -18,6 +18,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+// 사용자 정보 출력
 
 public class user_info extends AppCompatActivity {
 
@@ -46,6 +47,8 @@ public class user_info extends AppCompatActivity {
         userInfo_setting();
 
         userInfo_main = findViewById(R.id.userInfo_main_btn);
+
+        // 메인화면으로 이동
         userInfo_main.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -60,11 +63,14 @@ public class user_info extends AppCompatActivity {
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference().child("user");
 
+        // 로그인된 아이디에 해당하는 사용자 정보를 db에서 가져옴
         databaseReference.child(login_user_id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 userList group = dataSnapshot.getValue(userList.class);
                 //Toast.makeText(user_info.this, group.getName(), Toast.LENGTH_SHORT).show();
+
+                // 각각 이름, 아이디, otp 계정을 출력 (get 코드를 더 추가하여 정보를 더 가져올 수 있음)
                 user_name_data.setText(group.getName());
                 user_id_data.setText(login_user_id);
                 user_otp_data.setText(group.getOtp_key());

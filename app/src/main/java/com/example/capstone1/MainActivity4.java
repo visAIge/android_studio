@@ -30,6 +30,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
+// 아이디를 입력해서 qr 코드를 생성
+
 public class MainActivity4 extends AppCompatActivity {
     private Button createBtn;
     private EditText input_QR_user;
@@ -58,6 +60,8 @@ public class MainActivity4 extends AppCompatActivity {
 
         input_QR_user = findViewById(R.id.input_QR_user);
         qr_go_main = findViewById(R.id.qr_go_main);
+
+        // 메인화면으로 이동
         qr_go_main.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -71,12 +75,15 @@ public class MainActivity4 extends AppCompatActivity {
         createBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // 입력한 특정 아이디를 통해 db에서 해당 아이디의 데이터를 가져옴
                 databaseReference.child(input_QR_user.getText().toString()).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         userList group = dataSnapshot.getValue(userList.class);
+                        // {id:"입력한 아이디"}
                         qr_info.put("id",input_QR_user.getText().toString());
                         try {
+                            // {name : "입력한 아이디의 이름"}
                             qr_info.put("name", group.getName());
                             tmp_name = group.getName();
                         }catch (NullPointerException e) {
@@ -101,10 +108,12 @@ public class MainActivity4 extends AppCompatActivity {
                         qr_encryption crypto = new qr_encryption(SECRET_KEY);
                         String encryptText = crypto.encrypt(qr_info_str);
 
+                        // qr 생성
                         BitMatrix bitMatrix = multiFormatWriter.encode(encryptText, BarcodeFormat.QR_CODE,200,200);
                         BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
                         Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix); // bitmap 이미지 db에 저장
 
+                        // qr을 string으로 변환
                         ByteArrayOutputStream stream = new ByteArrayOutputStream();
                         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
                         byte[] reviewImage = stream.toByteArray();

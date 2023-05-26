@@ -20,6 +20,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.concurrent.Executor;
 
 
+// 도어록 비밀번호 입력
+
 public class MainActivity2 extends AppCompatActivity {
     private Executor executor;
     private BiometricPrompt biometricPrompt;
