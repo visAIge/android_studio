@@ -2,6 +2,7 @@ package com.example.capstone1;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,7 +25,7 @@ import java.util.ArrayList;
 public class MainActivity5 extends AppCompatActivity {
 
     ArrayList<String> arrayList = new ArrayList<>();
-    ArrayAdapter<String> adapter;
+    MyAdapter adapter;
     private String login_user_id;
 
     FirebaseDatabase firebaseDatabase;
@@ -58,7 +59,7 @@ public class MainActivity5 extends AppCompatActivity {
         });
 
         listView = findViewById(R.id.lv_LogList);
-        adapter = new ArrayAdapter<String>(this, R.layout.log_item_layout, arrayList);
+        adapter = new MyAdapter();
         listView.setAdapter(adapter);
 
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -95,7 +96,9 @@ public class MainActivity5 extends AppCompatActivity {
 
     // 선택한 버튼에 해당하는 데이터를 db에서 가져옴
     public void output_log() {
-        arrayList.clear();
+        //arrayList.clear();
+        adapter.deleteItem();
+
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -106,15 +109,16 @@ public class MainActivity5 extends AppCompatActivity {
                     boolean success = group.isSuccess();
 
                     String time_date = group.getDate();
-                    String time = time_date.substring(0,10);
-                    String date = time_date.substring(11,19);
-                    String log = user_id + "님이" + time + " " + date + "에 출입이 확인되었습니다.";
+                    String date = time_date.substring(0,10);
+                    String time = time_date.substring(11,19);
+                    String date_time = date + " / " + time;
+                    String log = user_id + "님의 출입이 확인되었습니다.";
 
                     if(group == null) {
                         Toast.makeText(MainActivity5.this, "null", Toast.LENGTH_SHORT).show();
                     }
                     else {
-                        arrayList.add(log);
+                        adapter.addItem(log,date_time);
                     }
                 }
                 adapter.notifyDataSetChanged();

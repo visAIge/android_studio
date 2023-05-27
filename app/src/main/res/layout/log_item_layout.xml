@@ -25,17 +25,19 @@
                 android:id="@+id/tv_item"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="출입이 확인되었습니다."
+                android:text="bae000님의 출입이 확인되었습니다."
                 android:padding="10dp"
                 android:textSize="16dp"
                 android:textColor="@color/black"
                 android:fontFamily="@font/thejamsil2light">
             </TextView>
+
             <TextView
+                android:id="@+id/tv_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="2023-05-27"
+                android:text="2023-05-27 22:54"
                 android:textColor="@color/black"
                 android:textSize="13dp"
                 android:paddingLeft="10dp">

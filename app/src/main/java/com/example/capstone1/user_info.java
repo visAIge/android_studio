@@ -24,8 +24,9 @@ public class user_info extends AppCompatActivity {
 
     private Button userInfo_main;
     private TextView user_name_data;
-    private TextView user_id_data;
+    private TextView user_phone_data;
     private TextView user_otp_data;
+    private TextView user_id;
 
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
@@ -41,8 +42,9 @@ public class user_info extends AppCompatActivity {
         login_user_id = login_intent.getExtras().getString("login_user_id");
 
         user_name_data = findViewById(R.id.user_info_name_data);
-        user_id_data = findViewById(R.id.user_info_id_data);
+        user_phone_data = findViewById(R.id.user_info_num_data);
         user_otp_data = findViewById(R.id.user_info_otp_data);
+        user_id = findViewById(R.id.user_info_id);
 
         userInfo_setting();
 
@@ -72,8 +74,9 @@ public class user_info extends AppCompatActivity {
 
                 // 각각 이름, 아이디, otp 계정을 출력 (get 코드를 더 추가하여 정보를 더 가져올 수 있음)
                 user_name_data.setText(group.getName());
-                user_id_data.setText(login_user_id);
+                user_phone_data.setText(group.getPhone_num());
                 user_otp_data.setText(group.getOtp_key());
+                user_id.setText(login_user_id + "님의 정보");
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
