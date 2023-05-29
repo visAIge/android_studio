@@ -22,8 +22,11 @@ public class MainActivity extends AppCompatActivity {
 
     private Button btn_password;
     private Button btn_otp;
-    private Button btn_QR;
+    private Button btn_check_QR;
     private Button btn_log;
+    private Button btn_user_info;
+    private Button btn_create_QR;
+
     private ImageView imageView;
     private Toolbar toolbar;
     private NavigationView navigationView;
@@ -36,6 +39,66 @@ public class MainActivity extends AppCompatActivity {
 
         Intent login_intent = getIntent();
         login_user_id = login_intent.getExtras().getString("login_user_id");
+
+        btn_password = findViewById(R.id.input_password);
+        btn_password.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, MainActivity2.class);
+                intent.putExtra("login_user_id", login_user_id);
+                startActivity(intent); //실제 화면 이동
+            }
+        });
+
+        btn_user_info = findViewById(R.id.button3);
+        btn_user_info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, user_info.class);
+                intent.putExtra("login_user_id", login_user_id);
+                startActivity(intent); //실제 화면 이동
+            }
+        });
+
+        btn_create_QR = findViewById(R.id.button4);
+        btn_create_QR.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, MainActivity4.class);
+                intent.putExtra("login_user_id", login_user_id);
+                startActivity(intent); //실제 화면 이동
+            }
+        });
+
+        btn_check_QR = findViewById(R.id.button5);
+        btn_check_QR.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, CreateQR.class);
+                intent.putExtra("login_user_id", login_user_id);
+                startActivity(intent); //실제 화면 이동
+            }
+        });
+
+        btn_log = findViewById(R.id.button6);
+        btn_log.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, MainActivity5.class);
+                intent.putExtra("login_user_id", login_user_id);
+                startActivity(intent); //실제 화면 이동
+            }
+        });
+
+        btn_otp = findViewById(R.id.button7);
+        btn_otp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, MainActivity3.class);
+                intent.putExtra("login_user_id", login_user_id);
+                startActivity(intent); //실제 화면 이동
+            }
+        });
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -79,43 +142,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        btn_password = findViewById(R.id.input_password);
-        btn_password.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, MainActivity2.class);
-                startActivity(intent); //실제 화면 이동
-            }
-        });
-
-        btn_otp = findViewById(R.id.button3);
-        btn_otp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, MainActivity3.class);
-                intent.putExtra("login_user_id", login_user_id);
-                startActivity(intent); //실제 화면 이동
-            }
-        });
-
-        btn_QR = findViewById(R.id.button4);
-        btn_QR.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, MainActivity4.class);
-                startActivity(intent); //실제 화면 이동
-            }
-        });
-
-        btn_log = findViewById(R.id.button5);
-        btn_log.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, CreateQR.class);
-                intent.putExtra("login_user_id", login_user_id);
-                startActivity(intent); //실제 화면 이동
-            }
-        });
 
         imageView = (ImageView) findViewById(R.id.main_image_view);
         registerForContextMenu(imageView);
