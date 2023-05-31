@@ -8,55 +8,83 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/QR_title"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="54dp"
-        android:layout_marginTop="150dp"
-        android:gravity="center"
-        android:text="Create QR Code"
-        android:textColor="@color/black"
-        android:textSize="30dp"
-        android:fontFamily="@font/leferipointwhiteoblique" />
+        android:layout_height="328dp"
+        android:layout_marginTop="70dp">
 
-    <TextView
-        android:id="@+id/QR_sub_title"
-        android:layout_width="match_parent"
-        android:layout_height="24dp"
-        android:layout_marginBottom="50dp"
-        android:gravity="center"
-        android:text="QR 코드 생성을 위해 사용자 입력 후 'CREATE' 버튼을 클릭해주세요!"
-        android:textColor="@color/black"
-        android:textSize="15dp"
-        android:fontFamily="@font/kyobohandwriting2021sjy"/>
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/animation_background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:background="@color/white"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_url="https://assets2.lottiefiles.com/packages/lf20_oh2gspuc.json" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/QR_title"
+                android:layout_width="381dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="100dp"
+                android:fontFamily="@font/vitrocore"
+                android:gravity="left"
+                android:text="Create \nQR Code"
+                android:textColor="@color/black"
+                android:textSize="50dp" />
+
+            <TextView
+                android:id="@+id/QR_sub_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_marginLeft="30dp"
+                android:fontFamily="@font/vitrocore"
+                android:gravity="left"
+                android:text="QR 코드 생성을 위한\n사용자 입력"
+                android:textColor="@color/black"
+                android:textSize="30dp" />
+        </LinearLayout>
+
+    </FrameLayout>
 
     <EditText
         android:id="@+id/input_QR_user"
-        android:layout_width="match_parent"
-        android:layout_height="65dp"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/qr_edit_text"
+        android:layout_width="350dp"
+        android:layout_height="55dp"
+        android:layout_gravity="center"
         android:layout_margin="20dp"
-        android:textColor="@color/black"/>
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/login_edittext_custom"
+        android:textColor="@color/black" />
 
     <Button
         android:id="@+id/create_QR"
-        android:layout_width="200dp"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="30dp"
+
         android:layout_marginBottom="13dp"
-        android:background="@drawable/btn_style"
+        android:background="@drawable/btn_style4"
         android:text="Create"
-        android:textColor="#090909" />
+        android:textColor="#FFFFFF" />
 
     <Button
         android:id="@+id/qr_go_main"
-        android:layout_width="200dp"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="13dp"
-        android:background="@drawable/btn_style"
+        android:background="@drawable/btn_style4"
         android:text="메인 화면"
-        android:textColor="#000000" />
+        android:textColor="#FFFFFF" />
 </LinearLayout>
