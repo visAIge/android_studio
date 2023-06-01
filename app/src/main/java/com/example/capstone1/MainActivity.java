@@ -1,5 +1,9 @@
 package com.example.capstone1;
 
+import static com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED;
+import static com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_DRAGGING;
+import static com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -15,6 +19,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.navigation.NavigationView;
 
 // 메인화면
@@ -27,20 +32,48 @@ public class MainActivity extends AppCompatActivity {
     private Button btn_user_info;
     private Button btn_create_QR;
 
-    private ImageView imageView;
-    private Toolbar toolbar;
-    private NavigationView navigationView;
+    //private ImageView imageView;
+    //private Toolbar toolbar;
+    //private NavigationView navigationView;
     private String login_user_id;
+
+    private BottomSheetBehavior bottomSheetBehavior;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activate_main_interface);
 
         Intent login_intent = getIntent();
         login_user_id = login_intent.getExtras().getString("login_user_id");
 
+        View bottomSheet = findViewById(R.id.sheet);
+
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+
+        //bottomSheetBehavior.setState(STATE_COLLAPSED);
+
+        bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if (newState == STATE_DRAGGING){
+                    bottomSheetBehavior.setFitToContents(true);
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                //bottomSheetBehavior.setState(STATE_EXPANDED);
+            }
+        });
+
+
+
+
+
+
         btn_password = findViewById(R.id.input_password);
+
         btn_password.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -49,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent); //실제 화면 이동
             }
         });
+
 
         btn_user_info = findViewById(R.id.button3);
         btn_user_info.setOnClickListener(new View.OnClickListener() {
@@ -100,6 +134,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        /*
+
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -143,7 +179,11 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+         */
+
+        /*
         imageView = (ImageView) findViewById(R.id.main_image_view);
         registerForContextMenu(imageView);
+         */
     }
 }
