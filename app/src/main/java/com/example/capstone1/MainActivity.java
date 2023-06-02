@@ -8,9 +8,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
+import androidx.databinding.BindingAdapter;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.MenuInflater;
@@ -186,3 +190,36 @@ public class MainActivity extends AppCompatActivity {
          */
     }
 }
+/*
+class ViewBindingAdapter {
+    @BindingAdapter(value = {"bgCornerRadius"})
+    public static void setBackgroundCornerRadius(View view, float cornerRadius){
+        if(view==null){
+            return;
+        }
+        Drawable drawable = view.getBackground();
+        cornerRadius *= view.getResources().getDisplayMetrics().density;
+        GradientDrawable gradientDrawable = GradientDrawableUtil.getGradientDrawable(drawable, cornerRadius);
+        view.setBackground(gradientDrawable);
+    }
+}
+
+class GradientDrawableUtil {
+
+    public static GradientDrawable getGradientDrawable(Drawable drawable, float cornerRadius){
+        GradientDrawable gradientDrawable;
+        if(drawable instanceof GradientDrawable){
+            gradientDrawable = (GradientDrawable) drawable;
+        }else{
+            gradientDrawable = new GradientDrawable();
+            if(drawable instanceof ColorDrawable){
+                ColorDrawable colorDrawable = (ColorDrawable) drawable;
+                gradientDrawable.setAlpha(colorDrawable.getAlpha());
+                gradientDrawable.setColor(colorDrawable.getColor());
+            }
+        }
+        gradientDrawable.setCornerRadius(cornerRadius);
+        return gradientDrawable;
+    }
+}
+ */
