@@ -42,7 +42,8 @@
         android:background="@drawable/login_edittext_custom"
         app:layout_constraintBottom_toTopOf="@+id/login_password"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:paddingLeft="15dp"/>
 
     <EditText
         android:id="@+id/login_password"
@@ -57,7 +58,8 @@
         android:textColor="@color/black"
         android:background="@drawable/login_edittext_custom"
         app:layout_constraintBottom_toTopOf="@+id/login_button"
-        app:layout_constraintStart_toStartOf="@+id/login_email" />
+        app:layout_constraintStart_toStartOf="@+id/login_email"
+        android:paddingLeft="15dp"/>
 
     <Button
         android:id="@+id/login"

@@ -39,13 +39,12 @@
                 android:gravity="left"
                 android:text="Create \nQR Code"
                 android:textColor="@color/black"
-                android:textSize="50dp" />
+                android:textSize="50dp"/>
 
             <TextView
                 android:id="@+id/QR_sub_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:layout_marginLeft="30dp"
                 android:fontFamily="@font/vitrocore"
                 android:gravity="left"
@@ -66,14 +65,13 @@
         android:layout_marginBottom="5dp"
         android:background="@drawable/login_edittext_custom"
         android:textColor="@color/black"
-        android:paddingLeft="12dp"/>
+        android:paddingLeft="15dp"/>
 
     <Button
         android:id="@+id/create_QR"
         android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-
         android:layout_marginBottom="13dp"
         android:background="@drawable/btn_style4"
         android:text="Create"
