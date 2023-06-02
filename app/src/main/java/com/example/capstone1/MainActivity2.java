@@ -2,6 +2,7 @@ package com.example.capstone1;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,8 +15,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.biometric.BiometricPrompt;
 import androidx.core.content.ContextCompat;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.concurrent.Executor;
 
@@ -27,34 +31,15 @@ public class MainActivity2 extends AppCompatActivity {
     private BiometricPrompt biometricPrompt;
     private BiometricPrompt.PromptInfo promptInfo;
 
-    DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
-    DatabaseReference conditionRef = mRootRef.child("input_password"); //앱에서 비밀번호 입력
-    DatabaseReference conditionRef2 = mRootRef.child("check_qr"); //지문 인식 성공하면 도어락 잠금 해제
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference databaseReference = database.getReference();
 
-    private Button pass_btn0;
-    private Button pass_btn1;
-    private Button pass_btn2;
-    private Button pass_btn3;
-    private Button pass_btn4;
-    private Button pass_btn5;
-    private Button pass_btn6;
-    private Button pass_btn7;
-    private Button pass_btn8;
-    private Button pass_btn9;
-    private Button pass_clear;
-    private Button pass_enter;
-
-    private Button fingerPrint_btn;
-    private Button back_btn;
-
-    private EditText etPasscode1;
-    private EditText etPasscode2;
-    private EditText etPasscode3;
-    private EditText etPasscode4;
-
-    private String password;
-
-    private String login_user_id;
+    private String login_user_id; // 로그인된 유저 아이디
+    private EditText input_door_pwd;
+    private Button open_door_btn; // 도어록 잠금 해제
+    private String real_doorLock_pwd; // db에 등록된 실제 도어록 비밀번호
+    private String input_doorLock_pwd; // 사용자가 입력한 도어록 비밀번호 값
+    private Button go_main;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,196 +48,51 @@ public class MainActivity2 extends AppCompatActivity {
 
         Intent login_intent = getIntent();
         login_user_id = login_intent.getExtras().getString("login_user_id");
+        input_door_pwd = findViewById(R.id.input_door_pwd);
+        open_door_btn = findViewById(R.id.input_door_pwd_btn);
+        go_main = findViewById(R.id.door_pwd_go_main);
 
-        pass_btn0 = findViewById(R.id.pass_btn0);
-        pass_btn1 = findViewById(R.id.pass_btn1);
-        pass_btn2 = findViewById(R.id.pass_btn2);
-        pass_btn3 = findViewById(R.id.pass_btn3);
-        pass_btn4 = findViewById(R.id.pass_btn4);
-        pass_btn5 = findViewById(R.id.pass_btn5);
-        pass_btn6 = findViewById(R.id.pass_btn6);
-        pass_btn7 = findViewById(R.id.pass_btn7);
-        pass_btn8 = findViewById(R.id.pass_btn8);
-        pass_btn9 = findViewById(R.id.pass_btn9);
-        pass_clear = findViewById(R.id.pass_clear);
-        pass_enter = findViewById(R.id.pass_enter);
+        // 1. 로그인된 유저 아이디에 저장된 실제 비밀번호 값 가져오기
+        databaseReference.child("user").child(login_user_id).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                userList group = dataSnapshot.getValue(userList.class);
+                real_doorLock_pwd = group.getLock_pwd();
+                Log.v("real pwd : ", real_doorLock_pwd);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(MainActivity2.this, "에러", Toast.LENGTH_SHORT).show();
+            }
+        });
 
-        fingerPrint_btn = findViewById(R.id.fingerPrint_btn);
-        fingerPrint_btn.setOnClickListener(fingerBtnListener);
+        open_door_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // 2. edit text에서 입력된 비밀번호와 로그인된 유저 아이디에 저장된 비밀번호를 비교
+                input_doorLock_pwd = input_door_pwd.getText().toString();
 
-        back_btn = findViewById(R.id.back_btn);
-        back_btn.setOnClickListener(new View.OnClickListener() {
+                Log.v("input pwd : ", input_doorLock_pwd);
+
+                if(input_doorLock_pwd.equals(real_doorLock_pwd)) {
+                    // 3. 2번이 true이면 도어록 잠금 해제 신호 db로 전송
+                    databaseReference.child("check_pwd").setValue("true");
+                    Toast.makeText(MainActivity2.this, "도어록 잠금을 해제합니다.", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    // 4. 2번이 false이면 에러 메시지 출력
+                    Toast.makeText(MainActivity2.this, "비밀번호를 다시 입력해주세요.", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+        go_main.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity2.this, MainActivity.class);
                 intent.putExtra("login_user_id", login_user_id);
-                startActivity(intent); //실제 화면 이동
+                startActivity(intent);
             }
         });
-
-        etPasscode1 = findViewById(R.id.etPasscode1);
-        etPasscode2 = findViewById(R.id.etPasscode2);
-        etPasscode3 = findViewById(R.id.etPasscode3);
-        etPasscode4 = findViewById(R.id.etPasscode4);
-
-        ArrayList buttonArray = new ArrayList<Button>();
-        buttonArray.add(pass_btn0);
-        buttonArray.add(pass_btn1);
-        buttonArray.add(pass_btn2);
-        buttonArray.add(pass_btn3);
-        buttonArray.add(pass_btn4);
-        buttonArray.add(pass_btn5);
-        buttonArray.add(pass_btn6);
-        buttonArray.add(pass_btn7);
-        buttonArray.add(pass_btn8);
-        buttonArray.add(pass_btn9);
-        buttonArray.add(pass_clear);
-        buttonArray.add(pass_enter);
-
-        for(Object button : buttonArray) {
-            Button btn = (Button) button;
-            btn.setOnClickListener(btnListener);
-        }
-
-        executor = ContextCompat.getMainExecutor(this);
-        biometricPrompt = new BiometricPrompt(this,
-                executor, new BiometricPrompt.AuthenticationCallback() {
-            @Override
-            public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
-                super.onAuthenticationError(errorCode, errString);
-                Toast.makeText(getApplicationContext(), "오류가 발생했습니다.", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
-                super.onAuthenticationSucceeded(result);
-                Toast.makeText(getApplicationContext(), "성공했습니다.", Toast.LENGTH_SHORT).show();
-                conditionRef2.setValue("true");
-            }
-
-            @Override
-            public void onAuthenticationFailed() {
-                super.onAuthenticationFailed();
-                Toast.makeText(getApplicationContext(), "실패했습니다.", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        promptInfo = new BiometricPrompt.PromptInfo.Builder()
-                .setTitle("지문 인증")
-                .setSubtitle("기기에 등록된 지문을 이용하여 지문을 인증해주세요.")
-                .setNegativeButtonText("취소")
-                .setDeviceCredentialAllowed(false)
-                .build();
     }
-
-    View.OnClickListener fingerBtnListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            biometricPrompt.authenticate(promptInfo);
-        }
-    };
-
-    View.OnClickListener btnListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            int currentValue = -1;
-            switch (view.getId()) {
-                case R.id.pass_btn0:
-                    currentValue = 0;
-                    break;
-                case R.id.pass_btn1:
-                    currentValue = 1;
-                    break;
-                case R.id.pass_btn2:
-                    currentValue = 2;
-                    break;
-                case R.id.pass_btn3:
-                    currentValue = 3;
-                    break;
-                case R.id.pass_btn4:
-                    currentValue = 4;
-                    break;
-                case R.id.pass_btn5:
-                    currentValue = 5;
-                    break;
-                case R.id.pass_btn6:
-                    currentValue = 6;
-                    break;
-                case R.id.pass_btn7:
-                    currentValue = 7;
-                    break;
-                case R.id.pass_btn8:
-                    currentValue = 8;
-                    break;
-                case R.id.pass_btn9:
-                    currentValue = 9;
-                    break;
-                case R.id.pass_clear:
-                    onClear();
-                    break;
-                case R.id.pass_enter:
-                    onEnter();
-                    break;
-            }
-
-            String strCurrentValue = Integer.toString(currentValue);
-            if(currentValue != -1) {
-                if(etPasscode1.isFocusable()) {
-                    etPasscode1.setText(strCurrentValue);
-                    etPasscode1.setFocusable(false);
-                    etPasscode2.setFocusable(true);
-                    etPasscode2.requestFocus();
-                }
-                else if(etPasscode2.isFocusable()) {
-                    etPasscode2.setText(strCurrentValue);
-                    etPasscode2.setFocusable(false);
-                    etPasscode3.setFocusable(true);
-                    etPasscode3.requestFocus();
-                }
-                else if(etPasscode3.isFocusable()) {
-                    etPasscode3.setText(strCurrentValue);
-                    etPasscode3.setFocusable(false);
-                    etPasscode4.setFocusable(true);
-                    etPasscode4.requestFocus();
-                }
-                else {
-                    etPasscode4.setText(strCurrentValue);
-                }
-            }
-
-            if(etPasscode1.length() != 0 && etPasscode2.length() != 0 && etPasscode3.length() != 0 && etPasscode4.length() != 0) {
-                password = etPasscode1.getText().toString() + etPasscode2.getText().toString() + etPasscode3.getText().toString() + etPasscode4.getText().toString();
-            }
-        }
-
-        private void onClear() {
-            etPasscode1.setText("");
-            etPasscode2.setText("");
-            etPasscode3.setText("");
-            etPasscode4.setText("");
-
-            if(etPasscode2.isFocusable()) {
-                etPasscode2.clearFocus();
-            }
-            else if(etPasscode3.isFocusable()) {
-                etPasscode3.clearFocus();
-            }
-            else if(etPasscode4.isFocusable()) {
-                etPasscode4.clearFocus();
-            }
-            etPasscode1.setFocusable(true);
-            etPasscode1.requestFocus();
-        }
-
-        private void onEnter() {
-            //파이어베이스로 비밀번호 전송
-            if(etPasscode1.length() != 0 && etPasscode2.length() != 0 && etPasscode3.length() != 0 && etPasscode4.length() != 0) {
-                Toast.makeText(getApplicationContext(), "비밀번호 입력 완료", Toast.LENGTH_SHORT).show();
-                conditionRef.setValue(password);
-            }
-            else {
-                Toast.makeText(getApplicationContext(), "비밀번호를 입력해주세요!", Toast.LENGTH_SHORT).show();
-            }
-        }
-    };
 }

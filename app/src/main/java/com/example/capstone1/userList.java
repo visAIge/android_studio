@@ -10,6 +10,7 @@ public class userList {
     private String otp_key;
     private HashMap<String, String> qr_code = new HashMap<String, String>();
     private String phone_num;
+    private String lock_pwd;
 
     public userList() {}
 
@@ -59,6 +60,14 @@ public class userList {
 
     public void setPhone_num(String phone_num) {
         this.phone_num = phone_num;
+    }
+
+    public String getLock_pwd() {
+        return lock_pwd;
+    }
+
+    public void setLock_pwd(String lock_pwd) {
+        this.lock_pwd = lock_pwd;
     }
 
     public userList(String id, String password, String name) {

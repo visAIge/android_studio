@@ -8,44 +8,56 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="328dp"
-            android:layout_marginTop="70dp">
+            android:layout_height="match_parent">
+
 
             <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/animation_background"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="600dp"
                 android:layout_centerInParent="true"
                 android:background="@color/white"
                 app:lottie_autoPlay="true"
                 app:lottie_loop="true"
-                app:lottie_url="https://assets6.lottiefiles.com/packages/lf20_8xgkc3be.json" />
+                app:lottie_url="https://assets4.lottiefiles.com/packages/lf20_8xgkc3be.json" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="153dp"
                 android:layout_marginTop="50dp"
-                android:gravity="center"
-                android:orientation="horizontal">
+                android:layout_marginRight="10dp"
+                android:gravity="right"
+                android:orientation="vertical">
 
                 <Button
                     android:id="@+id/button3"
-                    android:layout_width="110dp"
-                    android:layout_height="110dp"
-                    android:layout_gravity="center"
+                    android:layout_width="62dp"
+                    android:layout_height="62dp"
+                    android:layout_gravity="right"
                     android:layout_margin="5dp"
-                    android:background="@drawable/circle_btn_user"
-                    android:drawable="@drawable/main_user_info"
-                    android:paddingTop="20dp"
+                    android:background="@drawable/circle_btn_main_user"
+                    android:drawableTop="@drawable/abstractusericon"
+                    android:drawablePadding="-15dp"
+                    android:paddingTop="11dp"
                     android:textColor="#000000"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintBottom_toTopOf="parent"
                     tools:ignore="MissingConstraints" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="visage\ncapstone design"
+                    android:textSize="20dp"
+                    android:fontFamily="@font/vitrocore"
+                    android:textColor="#000000"
+                    android:layout_marginLeft="15dp"/>
+
 
             </LinearLayout>
 
@@ -78,10 +90,10 @@
 
                 <Button
                     android:id="@+id/input_password"
-                    android:layout_width="110dp"
-                    android:layout_height="110dp"
+                    android:layout_width="160dp"
+                    android:layout_height="160dp"
                     android:layout_gravity="center"
-                    android:layout_margin="5dp"
+                    android:layout_margin="15dp"
                     android:text="Open Door"
                     android:textColor="#000000"
                     android:background="@drawable/btn_style3"
@@ -92,10 +104,10 @@
 
                 <Button
                     android:id="@+id/button5"
-                    android:layout_width="110dp"
-                    android:layout_height="110dp"
+                    android:layout_width="160dp"
+                    android:layout_height="160dp"
                     android:layout_gravity="center"
-                    android:layout_margin="5dp"
+                    android:layout_margin="15dp"
                     android:background="@drawable/btn_style3"
                     android:drawableTop="@drawable/main_qr_check"
                     android:drawablePadding="-10dp"
