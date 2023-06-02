@@ -105,20 +105,23 @@ public class MainActivity5 extends AppCompatActivity {
                 for (DataSnapshot logSnapshot : snapshot.getChildren()) {
                     logList group = logSnapshot.getValue(logList.class);
 
-                    String user_id = group.getUser_id();
-                    boolean success = group.isSuccess();
+                    String date_time = "";
+                    String log = "";
+                    if(group.isSuccess()) {
+                        String user_id = group.getUser_id();
 
-                    String time_date = group.getDate();
-                    String date = time_date.substring(0,10);
-                    String time = time_date.substring(11,19);
-                    String date_time = date + " / " + time;
-                    String log = user_id + "님의 출입이 확인되었습니다.";
+                        String time_date = group.getDate();
+                        String date = time_date.substring(0,10);
+                        String time = time_date.substring(11,19);
+                        date_time = date + " / " + time;
+                        log = user_id + "님의 출입이 확인되었습니다.";
 
-                    if(group == null) {
-                        Toast.makeText(MainActivity5.this, "null", Toast.LENGTH_SHORT).show();
-                    }
-                    else {
-                        adapter.addItem(log,date_time);
+                        if(group == null) {
+                            Toast.makeText(MainActivity5.this, "null", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            adapter.addItem(log,date_time);
+                        }
                     }
                 }
                 adapter.notifyDataSetChanged();

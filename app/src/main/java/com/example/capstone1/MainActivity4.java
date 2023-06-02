@@ -115,7 +115,7 @@ public class MainActivity4 extends AppCompatActivity {
                             // qr 생성
                             BitMatrix bitMatrix = multiFormatWriter.encode(encryptText, BarcodeFormat.QR_CODE,200,200);
                             BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
-                            Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix); // bitmap 이미지 db에 저장
+                            Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix);
 
                             // qr을 string으로 변환
                             ByteArrayOutputStream stream = new ByteArrayOutputStream();

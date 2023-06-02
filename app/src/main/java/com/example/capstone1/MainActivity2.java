@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
@@ -21,6 +22,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Date;
 import java.util.concurrent.Executor;
 
 
@@ -40,6 +42,12 @@ public class MainActivity2 extends AppCompatActivity {
     private String real_doorLock_pwd; // db에 등록된 실제 도어록 비밀번호
     private String input_doorLock_pwd; // 사용자가 입력한 도어록 비밀번호 값
     private Button go_main;
+
+    int log_count = 3; // 출입 이력 로그 저장을 위한 카운트
+
+    long mNow;
+    Date mDate;
+    SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,10 +86,17 @@ public class MainActivity2 extends AppCompatActivity {
                     if(input_doorLock_pwd.equals(real_doorLock_pwd)) {
                         // 3. 2번이 true이면 도어록 잠금 해제 신호 db로 전송
                         databaseReference.child("check_pwd").setValue("true");
+                        // 4. 출입 이력 로그 저장
+                        DatabaseReference databaseReference2 = databaseReference.child("door_open").child(login_user_id).child("pwd_lock").child(Integer.toString(log_count));
+                        databaseReference2.child("date").setValue(getTime());
+                        databaseReference2.child("img").setValue("");
+                        databaseReference2.child("success").setValue(true);
+                        databaseReference2.child("user_id").setValue(login_user_id);
                         Toast.makeText(MainActivity2.this, "도어록 잠금을 해제합니다.", Toast.LENGTH_LONG).show();
+                        log_count = log_count + 1;
                     }
                     else {
-                        // 4. 2번이 false이면 에러 메시지 출력
+                        // 5. 2번이 false이면 에러 메시지 출력
                         Toast.makeText(MainActivity2.this, "비밀번호를 다시 입력해주세요.", Toast.LENGTH_LONG).show();
                     }
                 }
@@ -96,5 +111,12 @@ public class MainActivity2 extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    // 현재 시간 가져오는 함수
+    private String getTime(){
+        mNow = System.currentTimeMillis();
+        mDate = new Date(mNow);
+        return mFormat.format(mDate);
     }
 }
