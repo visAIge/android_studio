@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -105,11 +106,11 @@ public class MainActivity4 extends AppCompatActivity {
                         String qr_info_str = qr_info.toString();
 
                         // qr에 담을 문자열 암호화 과정
-                        //qr_encryption crypto = new qr_encryption(SECRET_KEY);
-                        //String encryptText = crypto.encrypt(qr_info_str);
+                        qr_encryption crypto = new qr_encryption(SECRET_KEY);
+                        String encryptText = crypto.encrypt(qr_info_str);
 
                         // qr 생성
-                        BitMatrix bitMatrix = multiFormatWriter.encode(qr_info_str, BarcodeFormat.QR_CODE,200,200);
+                        BitMatrix bitMatrix = multiFormatWriter.encode(encryptText, BarcodeFormat.QR_CODE,200,200);
                         BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
                         Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix); // bitmap 이미지 db에 저장
 

@@ -57,13 +57,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
                 if (newState == STATE_DRAGGING){
-                    bottomSheetBehavior.setFitToContents(true);
+
                 }
             }
 
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                //bottomSheetBehavior.setState(STATE_EXPANDED);
             }
         });
 

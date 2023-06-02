@@ -11,30 +11,45 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <LinearLayout
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:orientation="horizontal"
-            android:gravity="center">
+            android:layout_height="328dp"
+            android:layout_marginTop="70dp">
 
-            <Button
-                android:id="@+id/button3"
-                android:layout_width="110dp"
-                android:layout_height="110dp"
-                android:layout_gravity="center"
-                android:layout_margin="5dp"
-                android:text="User Info"
-                android:textColor="#000000"
-                android:background="@drawable/btn_style3"
-                android:drawableTop="@drawable/main_user_info"
-                android:paddingTop="20dp"
-                android:drawablePadding="-15dp"
-                app:layout_constraintBottom_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                tools:ignore="MissingConstraints" />
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/animation_background"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@color/white"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_url="https://assets6.lottiefiles.com/packages/lf20_8xgkc3be.json" />
 
-        </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/button3"
+                    android:layout_width="110dp"
+                    android:layout_height="110dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/circle_btn_user"
+                    android:drawable="@drawable/main_user_info"
+                    android:paddingTop="20dp"
+                    android:textColor="#000000"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintBottom_toTopOf="parent"
+                    tools:ignore="MissingConstraints" />
+
+            </LinearLayout>
+
+        </FrameLayout>
 
     </LinearLayout>
 
@@ -42,7 +57,7 @@
     <androidx.core.widget.NestedScrollView
         android:id="@+id/sheet"
         android:layout_width="match_parent"
-        android:layout_height="450dp"
+        android:layout_height="match_parent"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
         app:behavior_peekHeight = "200dp"
         android:background="@drawable/rounded">
