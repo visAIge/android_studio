@@ -85,13 +85,17 @@ public class MainActivity3 extends AppCompatActivity {
             
             @Override
             public void onClick(View view) {
-                boolean check = checkCode(otp_input.getText().toString(), otpkey); //EditText에 입력한 otp 코드와 생성된 otp 코드 비교
-                if(check) {
-                    Toast.makeText(getApplicationContext(), "도어락 키패드가 활성화됩니다.", Toast.LENGTH_SHORT).show();
-                    conditionRef.setValue("true");
-                }
-                else {
-                    Toast.makeText(getApplicationContext(), "otp 번호를 다시 입력해주세요!", Toast.LENGTH_SHORT).show();
+                if(otp_input.getText().toString().isEmpty()) {
+                    Toast.makeText(getApplicationContext(), "값을 입력해주세요!", Toast.LENGTH_SHORT).show();
+                } else {
+                    boolean check = checkCode(otp_input.getText().toString(), otpkey); //EditText에 입력한 otp 코드와 생성된 otp 코드 비교
+                    if(check) {
+                        Toast.makeText(getApplicationContext(), "도어락 키패드가 활성화됩니다.", Toast.LENGTH_SHORT).show();
+                        conditionRef.setValue("true");
+                    }
+                    else {
+                        Toast.makeText(getApplicationContext(), "otp 번호를 다시 입력해주세요!", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });

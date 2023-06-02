@@ -76,61 +76,65 @@ public class MainActivity4 extends AppCompatActivity {
         createBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // 입력한 특정 아이디를 통해 db에서 해당 아이디의 데이터를 가져옴
-                databaseReference.child(input_QR_user.getText().toString()).addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        userList group = dataSnapshot.getValue(userList.class);
-                        // {id:"입력한 아이디"}
-                        qr_info.put("id",input_QR_user.getText().toString());
-                        try {
-                            // {name : "입력한 아이디의 이름"}
-                            qr_info.put("name", group.getName());
-                            tmp_name = group.getName();
-                        }catch (NullPointerException e) {
-                            Toast.makeText(MainActivity4.this, "존재하지 않는 아이디입니다", Toast.LENGTH_SHORT).show();
+                if(input_QR_user.getText().toString().isEmpty()) {
+                    Toast.makeText(MainActivity4.this, "값을 입력해주세요!", Toast.LENGTH_SHORT).show();
+                } else {
+                    // 입력한 특정 아이디를 통해 db에서 해당 아이디의 데이터를 가져옴
+                    databaseReference.child(input_QR_user.getText().toString()).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            userList group = dataSnapshot.getValue(userList.class);
+                            // {id:"입력한 아이디"}
+                            qr_info.put("id",input_QR_user.getText().toString());
+                            try {
+                                // {name : "입력한 아이디의 이름"}
+                                qr_info.put("name", group.getName());
+                                tmp_name = group.getName();
+                            }catch (NullPointerException e) {
+                                Toast.makeText(MainActivity4.this, "존재하지 않는 아이디입니다", Toast.LENGTH_SHORT).show();
+                            }
                         }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            Toast.makeText(MainActivity4.this, "에러", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    if(tmp_name.equals("error")) {
+                        // 존재하지 않는 아이디를 입력한 경우 아무 동작도 실행하지 않음
                     }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        Toast.makeText(MainActivity4.this, "에러", Toast.LENGTH_SHORT).show();
+                    else {
+                        MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
+                        try{
+                            String qr_info_str = qr_info.toString();
+
+                            // qr에 담을 문자열 암호화 과정
+                            qr_encryption crypto = new qr_encryption(SECRET_KEY);
+                            String encryptText = crypto.encrypt(qr_info_str);
+
+                            // qr 생성
+                            BitMatrix bitMatrix = multiFormatWriter.encode(encryptText, BarcodeFormat.QR_CODE,200,200);
+                            BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+                            Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix); // bitmap 이미지 db에 저장
+
+                            // qr을 string으로 변환
+                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                            byte[] reviewImage = stream.toByteArray();
+                            String simage = byteArrayToBinaryString(reviewImage);
+
+                            // qr 이미지를 db에 저장
+                            databaseReference.child(input_QR_user.getText().toString()).child("qr_code").child("img").setValue(simage);
+
+                            // qr이 생성된 날짜 저장
+                            databaseReference.child(input_QR_user.getText().toString()).child("qr_code").child("date").setValue(getTime());
+
+                            // 만들어진 qr에 담긴 아이디를 저장
+                            databaseReference.child(input_QR_user.getText().toString()).child("qr_code").child("lock_user").setValue(login_user_id);
+
+                            Toast.makeText(MainActivity4.this, "QR코드 생성 성공", Toast.LENGTH_SHORT).show();
+                        }catch (Exception e){}
                     }
-                });
-
-                if(tmp_name.equals("error")) {
-                    // 존재하지 않는 아이디를 입력한 경우 아무 동작도 실행하지 않음
-                }
-                else {
-                    MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
-                    try{
-                        String qr_info_str = qr_info.toString();
-
-                        // qr에 담을 문자열 암호화 과정
-                        qr_encryption crypto = new qr_encryption(SECRET_KEY);
-                        String encryptText = crypto.encrypt(qr_info_str);
-
-                        // qr 생성
-                        BitMatrix bitMatrix = multiFormatWriter.encode(encryptText, BarcodeFormat.QR_CODE,200,200);
-                        BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
-                        Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix); // bitmap 이미지 db에 저장
-
-                        // qr을 string으로 변환
-                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                        byte[] reviewImage = stream.toByteArray();
-                        String simage = byteArrayToBinaryString(reviewImage);
-
-                        // qr 이미지를 db에 저장
-                        databaseReference.child(input_QR_user.getText().toString()).child("qr_code").child("img").setValue(simage);
-
-                        // qr이 생성된 날짜 저장
-                        databaseReference.child(input_QR_user.getText().toString()).child("qr_code").child("date").setValue(getTime());
-
-                        // 만들어진 qr에 담긴 아이디를 저장
-                        databaseReference.child(input_QR_user.getText().toString()).child("qr_code").child("lock_user").setValue(login_user_id);
-
-                        Toast.makeText(MainActivity4.this, "QR코드 생성 성공", Toast.LENGTH_SHORT).show();
-                    }catch (Exception e){}
                 }
             }
         });

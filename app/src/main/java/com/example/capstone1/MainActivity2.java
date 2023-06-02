@@ -58,7 +58,6 @@ public class MainActivity2 extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 userList group = dataSnapshot.getValue(userList.class);
                 real_doorLock_pwd = group.getLock_pwd();
-                Log.v("real pwd : ", real_doorLock_pwd);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -72,16 +71,19 @@ public class MainActivity2 extends AppCompatActivity {
                 // 2. edit text에서 입력된 비밀번호와 로그인된 유저 아이디에 저장된 비밀번호를 비교
                 input_doorLock_pwd = input_door_pwd.getText().toString();
 
-                Log.v("input pwd : ", input_doorLock_pwd);
-
-                if(input_doorLock_pwd.equals(real_doorLock_pwd)) {
-                    // 3. 2번이 true이면 도어록 잠금 해제 신호 db로 전송
-                    databaseReference.child("check_pwd").setValue("true");
-                    Toast.makeText(MainActivity2.this, "도어록 잠금을 해제합니다.", Toast.LENGTH_LONG).show();
+                if(input_doorLock_pwd.isEmpty()) {
+                    Toast.makeText(MainActivity2.this, "값을 입력해주세요.", Toast.LENGTH_LONG).show();
                 }
                 else {
-                    // 4. 2번이 false이면 에러 메시지 출력
-                    Toast.makeText(MainActivity2.this, "비밀번호를 다시 입력해주세요.", Toast.LENGTH_LONG).show();
+                    if(input_doorLock_pwd.equals(real_doorLock_pwd)) {
+                        // 3. 2번이 true이면 도어록 잠금 해제 신호 db로 전송
+                        databaseReference.child("check_pwd").setValue("true");
+                        Toast.makeText(MainActivity2.this, "도어록 잠금을 해제합니다.", Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                        // 4. 2번이 false이면 에러 메시지 출력
+                        Toast.makeText(MainActivity2.this, "비밀번호를 다시 입력해주세요.", Toast.LENGTH_LONG).show();
+                    }
                 }
             }
         });

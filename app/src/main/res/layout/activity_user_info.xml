@@ -26,7 +26,7 @@
             android:layout_marginTop="30dp"
             android:fontFamily="@font/leferipointwhiteoblique"
             android:gravity="center_horizontal"
-            android:text="Check My Info"
+            android:text="Check Your Info"
             android:textColor="@color/white"
             android:textSize="30dp" />
 
