@@ -73,13 +73,13 @@ public class CreateQR extends AppCompatActivity {
                 String image = group.getQr_code().get("img");
                 if(image.isEmpty()) {
                     Toast.makeText(CreateQR.this, "등록된 qr코드가 없습니다.", Toast.LENGTH_SHORT).show();
-                    iv.setImageResource(R.drawable.user_info_basic);
+                    iv.setImageResource(R.drawable.no_qr_img);
                 }
                 else {
                     Date today = null;
                     Date qr_date = null;
                     try {
-                        qr_date = mFormat.parse(group.getQr_code().get("date")); // 2023-04-14
+                        qr_date = mFormat.parse(group.getQr_code().get("date"));
                         today = mFormat.parse(getTime());
                     } catch (ParseException e) {
                         e.printStackTrace();
@@ -95,7 +95,7 @@ public class CreateQR extends AppCompatActivity {
                             //데이터베이스에서 qr 정보 삭제
                             delete_qr();
                             Toast.makeText(CreateQR.this, "QR코드는 일주일 후 삭제됩니다.", Toast.LENGTH_SHORT).show();
-                            iv.setImageResource(R.drawable.user_info_basic);
+                            iv.setImageResource(R.drawable.no_qr_img);
                         }
                         else {
                             byte[] b = binaryStringToByteArray(image);
