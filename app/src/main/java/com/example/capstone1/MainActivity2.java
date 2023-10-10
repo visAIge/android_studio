@@ -43,6 +43,8 @@ public class MainActivity2 extends AppCompatActivity {
     private String input_doorLock_pwd; // 사용자가 입력한 도어록 비밀번호 값
     private Button go_main;
 
+    private int pwd_check_num = 0; // 비밀번호 잘못 입력한 횟수 체크
+
     int log_count = 3; // 출입 이력 로그 저장을 위한 카운트
 
     long mNow;
@@ -98,6 +100,11 @@ public class MainActivity2 extends AppCompatActivity {
                     else {
                         // 5. 2번이 false이면 에러 메시지 출력
                         Toast.makeText(MainActivity2.this, "비밀번호를 다시 입력해주세요.", Toast.LENGTH_LONG).show();
+                        pwd_check_num = pwd_check_num + 1; // 잘못 입력한 횟수 1 증가
+                        databaseReference.child("pwd_num").setValue(pwd_check_num);
+                        if(pwd_check_num == 5) {
+                            Toast.makeText(MainActivity2.this, "도어록이 비활성화됩니다.", Toast.LENGTH_LONG).show();
+                        }
                     }
                 }
             }
